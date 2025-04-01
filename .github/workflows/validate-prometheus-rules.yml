@@ -27,11 +27,6 @@ jobs:
       - name: Install Python deps
         run: pip install -r requirements.txt
 
-      # - name: Install Promtool dep
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y prometheus
-
       - name: Get chart and template it
         run: |
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
