@@ -18,14 +18,19 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip' # caching pip dependencies
-      
+
+      - name: Apt Cache
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: prometheus
+
       - name: Install Python deps
         run: pip install -r requirements.txt
 
-      - name: Install Promtool dep
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y prometheus
+      # - name: Install Promtool dep
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y prometheus
 
       - name: Get chart and template it
         run: |
