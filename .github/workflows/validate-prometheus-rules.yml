@@ -1,0 +1,31 @@
+name: Validate Prometheus Rules
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Python & dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y prometheus
+          pip install pyyaml
+      - name: Get chart and template it
+        run: |
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          helm repo update
+          helm template prometheus-community/kube-prometheus-stack > helm-template.yaml
+
+      - name: Generate Prometheus rule files
+        run: python helm_rule_validator.py helm-template.yaml
+
+      - name: Validate rules with promtool
+        run: promtool check rules helm-template-promtool.yaml
